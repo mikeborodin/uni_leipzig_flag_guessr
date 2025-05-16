@@ -2,9 +2,9 @@
 
 Project structure:
 
-lib
 
 ```
+lib
 ├── data
 │   └── countries_repository.dart
 ├── domain
