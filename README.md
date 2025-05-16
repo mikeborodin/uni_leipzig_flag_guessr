@@ -1,16 +1,31 @@
-# flag_quessr
+# FlagGuessr 🌍
 
-A new Flutter project.
+Project structure:
 
-## Getting Started
+lib
+├── data
+│   └── countries_repository.dart
+├── domain
+│   └── country.dart
+├── main.dart
+└── ui
+    ├── app.dart
+    ├── screens
+    │   ├── countries_list_screen.dart
+    │   └── country_detail_screen.dart
+    └── theme.dart
 
-This project is a starting point for a Flutter application.
+## Features
+* Loading data from the Countries API
+* Caching locally (using simple JSON file)
+* Filtering / Searching for a country
+* Marking a country as a Favorite
+* Opening the country shows the flag (as emoji).
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Getting started
+* Make sure you have `git` and `flutter` tools installed
+* `git clone https://github.com/mikeborodin/uni_leipzig_flag_guessr`
+* `cd uni_leipzig_flag_guessr`
+* `flutter pub get`
+* `flutter run`
