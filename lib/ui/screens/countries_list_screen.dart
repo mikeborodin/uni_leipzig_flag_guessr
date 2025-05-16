@@ -226,7 +226,7 @@ class _CountryListScreenState extends State<CountryListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Countries Explorer'),
+        title: const Text('Flag Guessr'),
         actions: [
           IconButton(
             icon: Icon(
