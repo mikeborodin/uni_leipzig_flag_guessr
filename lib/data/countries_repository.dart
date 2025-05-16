@@ -23,11 +23,27 @@ class CountriesRepository {
     return File('$path/favorites.json');
   }
 
-  Future<http.Response> loadFromApi() async {
+  Future<http.Response> loadCountriesFromApi() async {
     final response = await http.get(
       Uri.parse('https://restcountries.com/v3.1/all?fields=name,flag'),
     );
     return response;
+  }
+
+  Future<List<Country>> storeCountriesInCache(http.Response response) async {
+    final List<dynamic> jsonData = json.decode(response.body);
+    final List<Country> fetchedCountries = jsonData.map((item) => Country.fromJson(item)).toList();
+    final file = await countriesCacheFile;
+    await file.writeAsString(json.encode(fetchedCountries.map((c) => c.toJson()).toList()));
+    return fetchedCountries;
+  }
+
+  Future<List<Country>> readCountriesFromCache() async {
+    final countriesFile = await countriesCacheFile;
+    final contents = await countriesFile.readAsString();
+    final List<dynamic> jsonData = json.decode(contents);
+    final result = jsonData.map((item) => Country.fromJson(item)).toList();
+    return result;
   }
 
   Future<Map<String, bool>> readFavorites() async {
@@ -41,27 +57,8 @@ class CountriesRepository {
     }
   }
 
-  Future<List<Country>> storeInCache(http.Response response) async {
-    final List<dynamic> jsonData = json.decode(response.body);
-    final List<Country> fetchedCountries =
-       
-        jsonData.map((item) => Country.fromJson(item)).toList();
-
-    // Save to cache file
-    final file = await countriesCacheFile;
-    
-    await file.writeAsString(
-      json.encode(fetchedCountries.map((c) => c.toJson()).toList()),
-
-    );
-    return fetchedCountries;
-  }
-
-  Future<List<Country>> readFromFile() async {
-    final countriesFile = await countriesCacheFile;
-    final contents = await countriesFile.readAsString();
-    final List<dynamic> jsonData = json.decode(contents);
-    final result = jsonData.map((item) => Country.fromJson(item)).toList();
-    return result;
+  Future<void> writeFavorites(Map<String, bool> favorites) async {
+    final file = await favoritesFile;
+    await file.writeAsString(json.encode(favorites));
   }
 }

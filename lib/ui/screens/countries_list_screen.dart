@@ -1,8 +1,5 @@
-import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:path_provider/path_provider.dart';
 
 import '../../data/countries_repository.dart';
 import '../../domain/country.dart';
@@ -44,18 +41,6 @@ class _CountryListScreenState extends State<CountryListScreen> {
   // Responsible for loading the data
   final repo = CountriesRepository();
 
-  // Helper to get the local documents directory path
-  Future<String> get _localPath async {
-    final directory = await getApplicationDocumentsDirectory();
-    return directory.path;
-  }
-
-  // Helper to get the file for storing favorites
-  Future<File> get _favoritesFile async {
-    final path = await _localPath;
-    return File('$path/favorites.json');
-  }
-
   @override
   void initState() {
     super.initState();
@@ -77,7 +62,7 @@ class _CountryListScreenState extends State<CountryListScreen> {
     try {
       final countriesFile = await repo.countriesCacheFile;
       if (await countriesFile.exists()) {
-        _allCountries = await repo.readFromFile();
+        _allCountries = await repo.readCountriesFromCache();
 
         if (_allCountries.isNotEmpty) {
           _applyFavoritesFilterAndSort();
@@ -107,10 +92,10 @@ class _CountryListScreenState extends State<CountryListScreen> {
 
   Future<void> _fetchFromApiAndSave({bool isBackgroundUpdate = false}) async {
     try {
-      http.Response response = await repo.loadFromApi();
+      http.Response response = await repo.loadCountriesFromApi();
 
       if (response.statusCode == 200) {
-        _allCountries = await repo.storeInCache(response);
+        _allCountries = await repo.storeCountriesInCache(response);
 
         _applyFavoritesFilterAndSort();
 
@@ -155,8 +140,7 @@ class _CountryListScreenState extends State<CountryListScreen> {
 
   Future<void> _saveFavorites() async {
     try {
-      final file = await _favoritesFile;
-      await file.writeAsString(json.encode(_favorites));
+      await repo.writeFavorites(_favorites);
     } catch (e) {
       if (mounted) {
         setState(() => _error += "\nError saving favorites: $e");
