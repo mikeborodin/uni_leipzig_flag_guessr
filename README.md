@@ -3,6 +3,8 @@
 Project structure:
 
 lib
+
+```
 ├── data
 │   └── countries_repository.dart
 ├── domain
@@ -14,6 +16,7 @@ lib
     │   ├── countries_list_screen.dart
     │   └── country_detail_screen.dart
     └── theme.dart
+```
 
 ## Features
 * Loading data from the Countries API
